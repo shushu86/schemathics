@@ -1,0 +1,71 @@
+.container {
+  display: flex;
+  flex-direction: column;
+
+  // Same columns for header row and each task row (last = actions)
+  --task-grid-cols:
+    minmax(2.5rem, 4rem) minmax(6rem, 1.1fr) minmax(8rem, 2fr)
+    minmax(4rem, 0.7fr) minmax(4.5rem, 0.7fr) minmax(5.5rem, 0.9fr)
+    minmax(6.5rem, max-content);
+
+  .headers,
+  .task-list .row {
+    display: grid;
+    grid-template-columns: var(--task-grid-cols);
+    column-gap: 1rem;
+    align-items: center;
+    padding: 0.35rem 0;
+  }
+
+  .headers {
+    border-bottom: 1px solid #ccc;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #444;
+  }
+
+  .header-label {
+    margin: 0;
+  }
+
+  .task-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .task-list .row {
+    border-bottom: 1px solid #eee;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .task-list .cell {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .task-list .cell-title {
+    font-weight: 600;
+  }
+
+  .headers .header-label--actions,
+  .task-list .cell-actions {
+    justify-self: end;
+    text-align: right;
+  }
+
+  .task-list .cell-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+}
