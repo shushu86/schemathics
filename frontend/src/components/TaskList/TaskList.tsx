@@ -13,6 +13,19 @@ const TaskList = ({
 }) => {
 
   const [showAddTask, setShowAddTask] = useState(false);
+  const [dueDateSort, setDueDateSort] = useState<'asc' | 'desc'>('desc');
+  
+  const sortTasks = () => {
+    const asc = dueDateSort === 'asc'
+    updateTasks((prev) =>
+      [...prev].sort((a, b) => {
+        const diff =
+          new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+        return asc ? diff : -diff
+      })
+    )
+    setDueDateSort(asc ? 'desc' : 'asc')
+  }
 
   const handleShowAddTask = () => {
     setShowAddTask(true);
@@ -22,7 +35,6 @@ const TaskList = ({
     setShowAddTask(false);
   }
 
-  console.log('tasks', tasks);
     return (
         <div className="container">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -35,15 +47,16 @@ const TaskList = ({
             <span className="header-label">Description</span>
             <span className="header-label">Status</span>
             <span className="header-label">Priority</span>
-            <span className="header-label">Due date</span>
-            <span></span>
+            <span className="header-label" onClick={sortTasks} style={{ cursor: 'pointer' }}>Due date</span>
+            <span className="header-label">Created at</span>
           </div>
 
           <ul className="task-list">
-            {showAddTask && <AddTask handleHideAddTask={handleHideAddTask} updateTasks={updateTasks} /> }
             {tasks.map((task) => (
               <TaskItem key={task.id} task={task} updateTasks={updateTasks} />
             ))}
+            {showAddTask && <AddTask handleHideAddTask={handleHideAddTask} updateTasks={updateTasks} /> }
+
           </ul>
         </div>
     )

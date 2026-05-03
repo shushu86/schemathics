@@ -43,7 +43,7 @@ const AddTask = ({
     }
 
   return (
-    <li className="row">
+    <li className="row new-task">
         <span className="cell">
             <input type="hidden" />
         </span>
@@ -71,8 +71,8 @@ const AddTask = ({
             <input type="date" name="due_date" id="due_date" value={fields.due_date} onChange={handleChange} />
         </span>
         <span className="cell">
-            <button onClick={handleSubmit}>Add Task</button>
-            <button onClick={handleHideAddTask}>Cancel</button>
+            <button onClick={handleSubmit} className="confirm-button">Confirm</button>
+            <button onClick={handleHideAddTask} className="cancel-button">Cancel</button>
         </span>
     </li>
   )

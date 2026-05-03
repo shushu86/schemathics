@@ -24,6 +24,7 @@ class TaskResource extends JsonResource
             'status' => self::formatStatus($this->status),
             'priority' => self::formatPriority($this->priority),
             'due_date' => $this->due_date?->format('M j, Y'),
+            'created_at' => $this->created_at?->format('M j, Y'),
         ];
     }
 

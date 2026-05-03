@@ -5,4 +5,5 @@ export type Task = {
   status: string
   priority: string
   due_date: string
+  created_at: string
 }

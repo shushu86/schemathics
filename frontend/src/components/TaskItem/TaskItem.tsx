@@ -7,15 +7,15 @@ type TaskItemProps = {
 }   
 
 const TaskItem = ({ task, updateTasks }: TaskItemProps) => {
-  const handleDeleteTask = async () => {
+  const handleDeleteTask = async (id: number) => {
     try {
-      const response = await fetch(`/api/tasks/${task.id}`, {
+      const response = await fetch(`/api/tasks/${id}`, {
         method: 'DELETE',
       })
       if (!response.ok) {
         throw new Error('Failed to delete task')
       }
-      updateTasks(prev => prev.filter(task => task.id !== task.id))
+      updateTasks(prev => prev.filter(task => task.id !== id))
     } catch (error) {
       console.error('Error deleting task:', error)
     }
@@ -28,8 +28,9 @@ const TaskItem = ({ task, updateTasks }: TaskItemProps) => {
       <span className="cell">{task.status}</span>
       <span className="cell">{task.priority}</span>
       <span className="cell">{task.due_date}</span>
+      <span className="cell">{task.created_at}</span>
       <span className="cell cell-actions">
-        <button type="button" className="action-button" onClick={handleDeleteTask}>
+        <button type="button" className="action-button" onClick={() => handleDeleteTask(task.id)}>
           Delete
         </button>
       </span>

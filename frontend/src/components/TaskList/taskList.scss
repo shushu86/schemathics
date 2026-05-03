@@ -15,9 +15,31 @@
     column-gap: 1rem;
     align-items: center;
     padding: 0.35rem 0;
+    &:nth-child(even) {
+      background-color: #f5f5f5;
+    }
+    &.new-task {
+      background-color: #cfeaf3;
+      border: 1px solid #272829 !important;
+      border-radius: 0.25rem;
+      button {
+        border: none;
+        border-radius: 0.25rem;
+        margin-right: 0.5rem;
+        padding: 5px;
+        cursor: pointer;
+        color: #fff;
+        &.confirm-button {
+          background-color: #007bff;
+        }
+        &.cancel-button {
+          background-color: #dc3545;
+        }
+      }
+    }
   }
 
-  .headers {
+  .headers:not(.new-task) {
     border-bottom: 1px solid #ccc;
     font-weight: 600;
     font-size: 0.75rem;
