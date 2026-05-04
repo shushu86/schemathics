@@ -87,7 +87,14 @@ const AddOrEditTask = ({
             <input type="hidden" />
         </span>
         <span className="cell">
-            <input type="text" name="title" id="title" value={fields.title} onChange={handleChange} style={{ border: !fields.title && '3px solid red' }}/>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              value={fields.title}
+              onChange={handleChange}
+              className={!fields.title ? 'input--invalid' : undefined}
+            />
         </span>
         <span className="cell">
             <input type="text" name="description" id="description" value={fields.description} onChange={handleChange} />
@@ -111,11 +118,24 @@ const AddOrEditTask = ({
         </span>
         <span><input type="hidden" /></span>
         <span className="cell">
-            <button onClick={handleSubmit} className="confirm-button" disabled={!fields.title} style={{ cursor: !fields.title ? 'not-allowed' : 'pointer' }}>Confirm</button>
-            <button onClick={handleHideAddTask} className="cancel-button">Cancel</button>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="btn btn--primary"
+              disabled={!fields.title}
+            >
+              Confirm
+            </button>
+            <button type="button" onClick={handleHideAddTask} className="btn btn--ghost">
+              Cancel
+            </button>
         </span>
     </li>
-    {error && <div className="error-message" style={{ color: 'red', display: 'flex', paddingTop: '10px'}}>{error}</div>}
+    {error && (
+      <li className="row row--error">
+        <p className="error-message">{error}</p>
+      </li>
+    )}
     </>
   )
 }

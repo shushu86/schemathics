@@ -24,11 +24,13 @@ function App() {
     console.log('tasks', tasks);
   }, [])
 
-  return(
-    <div style={{ paddingLeft: '10vw', paddingRight: '10vw', paddingTop: '2vw', paddingBottom: '2vw' }}>
-      {
-        loading ? <p>Loading...</p> : <TaskList tasks={tasks} updateTasks={setTasks}/>
-      }
+  return (
+    <div className="app">
+      {loading ? (
+        <p className="app__loading">Loading…</p>
+      ) : (
+        <TaskList tasks={tasks} updateTasks={setTasks} />
+      )}
     </div>
   )
 }

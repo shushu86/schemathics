@@ -37,14 +37,29 @@ const TaskItem = ({ task, updateTasks }: TaskItemProps) => {
         <span className="cell cell-title">{task.title}</span>
         <span className="cell">{task.description}</span>
         <span className="cell">{task.status}</span>
-        <span className="cell" style={{ color: isEffectivePriorityHigh(task) ? 'red' : undefined }} >
-            {isEffectivePriorityHigh(task) ? 'High' : task.stored_priority}
+        <span
+          className={
+            isEffectivePriorityHigh(task) ? 'cell priority--high' : 'cell'
+          }
+        >
+          {isEffectivePriorityHigh(task) ? 'High' : task.stored_priority}
         </span>
         <span className="cell">{task.due_date}</span>
         <span className="cell">{task.created_at}</span>
         <span className="cell cell-actions">
-          <button type="button" className="action-button" onClick={() => setIsEditMode(true)}>Edit</button>
-          <button type="button" className="action-button" onClick={() => confirm('Are you sure you want to delete this task?') && handleDeleteTask(task.id)}>Delete</button>
+          <button type="button" className="btn btn--ghost" onClick={() => setIsEditMode(true)}>
+            Edit
+          </button>
+          <button
+            type="button"
+            className="btn btn--danger"
+            onClick={() =>
+              confirm('Are you sure you want to delete this task?') &&
+              handleDeleteTask(task.id)
+            }
+          >
+            Delete
+          </button>
         </span>
       </li>
     );

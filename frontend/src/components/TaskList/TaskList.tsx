@@ -48,16 +48,15 @@ const TaskList = ({
 
     return (
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h1>Task List</h1>
-            <button onClick={handleShowAddTask} style={{ padding: '0.5rem 1rem', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '0.25rem', cursor: 'pointer' }}>+ Add Task</button>
+          <div className="toolbar">
+            <h1 className="page-title">Tasks</h1>
+            <button type="button" className="btn btn--primary" onClick={handleShowAddTask}>
+              + Add task
+            </button>
           </div>
-          <div
-            className="task-list__filters"
-            style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}
-          >
-            <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-              Filters: Status
+          <div className="filters">
+            <label>
+              Status
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as TaskStatusFilter)}
@@ -68,7 +67,7 @@ const TaskList = ({
                 <option value="done">Done</option>
               </select>
             </label>
-            <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+            <label>
               Priority
               <select
                 value={priorityFilter}
@@ -87,8 +86,34 @@ const TaskList = ({
             <span className="header-label">Description</span>
             <span className="header-label">Status</span>
             <span className="header-label">Priority</span>
-            <span className="header-label" onClick={() => handleSortTasks('due_date')} style={{ cursor: 'pointer' }}>Due date</span>
-            <span className="header-label" onClick={() => handleSortTasks('created_at')} style={{ cursor: 'pointer' }}>Created at</span>
+            <span
+              className="header-label header-label--sort"
+              onClick={() => handleSortTasks('due_date')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  handleSortTasks('due_date')
+                }
+              }}
+            >
+              Due date
+            </span>
+            <span
+              className="header-label header-label--sort"
+              onClick={() => handleSortTasks('created_at')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  handleSortTasks('created_at')
+                }
+              }}
+            >
+              Created at
+            </span>
             <span className="header-label header-label--actions">Actions</span>
           </div>
 
