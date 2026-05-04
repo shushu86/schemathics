@@ -64,6 +64,8 @@ If I had more time:
     * Better client error handling both in code and visually, usually i approach it differently
     * many more... :D
 
+    ** OK A little update: couldn't send it over when it looks visually not that good, so I let the AI do its thing eventually
+
 Tradeoffs:
     * Formatting strings,dates etc to make it look ok in order to get the right datetime in the UI compared to the server and ISO'ing and localizations etc. Normally I would use many different libraries to help with it but it can be kind of heavy as for dependencies on a small project (UI libraries, lodash, date libraries etc)
 
