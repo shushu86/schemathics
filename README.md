@@ -61,6 +61,7 @@ If I had more time:
     * More generic functions, there are some repetative patterns in the backend as well as the client that i would make it more generic and especially when it comes to helpers - to make it easier and cleaner.
     * I might choose to do the Add and Edit as a nice modal popup but i was already deep into the logic so i didn't want to change it all and to make the task longer
     * I feel that the Laravel code could use some more cleanup and simplify things there
+    * Better client error handling both in code and visually, usually i approach it differently
     * many more... :D
 
 Tradeoffs:

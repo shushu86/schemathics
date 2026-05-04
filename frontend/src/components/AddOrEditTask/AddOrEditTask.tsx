@@ -87,7 +87,7 @@ const AddOrEditTask = ({
             <input type="hidden" />
         </span>
         <span className="cell">
-            <input type="text" name="title" id="title" value={fields.title} onChange={handleChange} />
+            <input type="text" name="title" id="title" value={fields.title} onChange={handleChange} style={{ border: !fields.title && '3px solid red' }}/>
         </span>
         <span className="cell">
             <input type="text" name="description" id="description" value={fields.description} onChange={handleChange} />
@@ -111,7 +111,7 @@ const AddOrEditTask = ({
         </span>
         <span><input type="hidden" /></span>
         <span className="cell">
-            <button onClick={handleSubmit} className="confirm-button">Confirm</button>
+            <button onClick={handleSubmit} className="confirm-button" disabled={!fields.title} style={{ cursor: !fields.title ? 'not-allowed' : 'pointer' }}>Confirm</button>
             <button onClick={handleHideAddTask} className="cancel-button">Cancel</button>
         </span>
     </li>
