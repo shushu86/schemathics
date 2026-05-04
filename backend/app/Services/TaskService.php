@@ -9,7 +9,7 @@ class TaskService
 {
     public function getAllTasks(): Collection
     {
-        return Task::query()->latest()->get();
+        return Task::query()->orderBy('due_date', 'asc')->get();
     }
 
     public function getTaskById(int $id): Task

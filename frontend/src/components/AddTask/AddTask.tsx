@@ -4,16 +4,20 @@ import type { Task } from "../../types/task";
 const AddTask = ({
     handleHideAddTask,
     updateTasks,
+    task,
 }: {
     handleHideAddTask: () => void;
     updateTasks: Dispatch<SetStateAction<Task[]>>;
+    task?: Task;
 }) => {
+
+    console.log('task', task);
     const [fields, setFields] = useState({
-        title: '',
-        description: '',
-        status: 'todo',
-        priority: 'medium',
-        due_date: '',
+        title: task?.title ?? '',
+        description: task?.description ?? '',
+        status: task?.status.toLowerCase() ?? 'todo',
+        priority: task?.priority.toLowerCase() ?? 'low',
+        due_date: task?.due_date ? new Date(task.due_date).toISOString().slice(0, 16) : null,
     })
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -23,20 +27,41 @@ const AddTask = ({
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch('/api/tasks/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-                body: JSON.stringify(fields),
-            })
-            if (!response.ok) {
-                throw new Error('Failed to create task')
+            if(task) {
+                const response = await fetch(`/api/tasks/${task.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                    body: JSON.stringify(fields),
+                })
+                if (!response.ok) {
+                    throw new Error('Failed to update task')
+                }
+                const updatedTask = (await response.json()) as Task
+                updateTasks((prev) => prev.map(taskItem => taskItem.id === task.id ? updatedTask : taskItem))
+                handleHideAddTask()
             }
-            const newTask = (await response.json()) as Task
-            updateTasks((prev) => [...prev, newTask])
-            handleHideAddTask()
+
+            else {
+                const response = await fetch('/api/tasks/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                    body: JSON.stringify(fields),
+                })
+                if (!response.ok) {
+                    throw new Error('Failed to create task')
+                }
+                const newTask = (await response.json()) as Task
+                updateTasks((prev) => [...prev, newTask]);
+            }
+            
+            
+            handleHideAddTask();
         } catch (error) {
             console.error('Error creating task:', error)
         }
@@ -68,8 +93,9 @@ const AddTask = ({
             </select>
         </span>
         <span className="cell">
-            <input type="date" name="due_date" id="due_date" value={fields.due_date} onChange={handleChange} />
+            <input type="datetime-local" name="due_date" id="due_date" value={fields.due_date} onChange={handleChange} />
         </span>
+        <span><input type="hidden" /></span>
         <span className="cell">
             <button onClick={handleSubmit} className="confirm-button">Confirm</button>
             <button onClick={handleHideAddTask} className="cancel-button">Cancel</button>

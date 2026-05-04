@@ -49,6 +49,7 @@ const TaskList = ({
             <span className="header-label">Priority</span>
             <span className="header-label" onClick={sortTasks} style={{ cursor: 'pointer' }}>Due date</span>
             <span className="header-label">Created at</span>
+            <span className="header-label header-label--actions">Actions</span>
           </div>
 
           <ul className="task-list">

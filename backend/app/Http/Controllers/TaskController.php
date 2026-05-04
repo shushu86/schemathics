@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Services\TaskService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -37,8 +38,9 @@ class TaskController extends Controller
             'description' => ['nullable', 'string'],
             'status' => ['nullable', 'in:todo,in_progress,done'],
             'priority' => ['nullable', 'in:low,medium,high'],
-            'due_date' => ['nullable', 'date'],
+            'due_date' => ['nullable', 'date_format:Y-m-d\TH:i'],
         ]);
+        $validated = $this->normalizeDueDate($validated);
 
         $task = Task::query()->create($validated);
 
@@ -52,12 +54,13 @@ class TaskController extends Controller
             'description' => ['nullable', 'string'],
             'status' => ['nullable', 'in:todo,in_progress,done'],
             'priority' => ['nullable', 'in:low,medium,high'],
-            'due_date' => ['nullable', 'date'],
+            'due_date' => ['nullable', 'date_format:Y-m-d\TH:i'],
         ]);
+        $validated = $this->normalizeDueDate($validated);
 
         $updated = $this->taskService->updateTask($task, $validated);
 
-        return new TaskResource($updated);
+        return (new TaskResource($updated))->response();
     }
 
     public function deleteTask(Task $task): JsonResponse
@@ -65,5 +68,23 @@ class TaskController extends Controller
         $this->taskService->deleteTask($task);
 
         return response()->json(status: 204);
+    }
+
+    
+    private function normalizeDueDate(array $validated): array
+    {
+        if (!array_key_exists('due_date', $validated)) {
+            return $validated;
+        }
+
+        if ($validated['due_date'] === '' || $validated['due_date'] === null) {
+            $validated['due_date'] = null;
+
+            return $validated;
+        }
+
+        $validated['due_date'] = Carbon::createFromFormat('Y-m-d\TH:i', (string) $validated['due_date']);
+
+        return $validated;
     }
 }
