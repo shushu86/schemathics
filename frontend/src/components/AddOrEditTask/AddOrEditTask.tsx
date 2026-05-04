@@ -1,6 +1,11 @@
 import { useState, type ChangeEvent, type Dispatch, type SetStateAction } from "react";
 import type { Task } from "../../types/task";
-import { formatDateForDatetimeLocal, isEffectivePriorityHigh } from "../../helpers/helper.ts";
+import {
+    formatDateForDatetimeLocal,
+    isEffectivePriorityHigh,
+    messageFromApiErrorBody,
+    statusToApiSlug,
+} from "../../helpers/helper.ts";
 
 const AddOrEditTask = ({
     handleHideAddTask,
@@ -15,12 +20,14 @@ const AddOrEditTask = ({
     const [fields, setFields] = useState({
         title: task?.title ?? '',
         description: task?.description ?? '',
-        status: task?.status.toLowerCase() ?? 'todo',
+        status: task ? statusToApiSlug(task.status) : 'todo',
         priority: isEffectivePriorityHigh(task) ? 'high' : (task?.stored_priority?.toLowerCase() ?? 'low'),
         due_date: task?.due_date
             ? formatDateForDatetimeLocal(new Date(task.due_date))
             : '',
     })
+
+    const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target
@@ -29,6 +36,7 @@ const AddOrEditTask = ({
 
     const handleSubmit = async () => {
         try {
+            setError(null)
             if(task) {
                 const response = await fetch(`/api/tasks/${task.id}`, {
                     method: 'PUT',
@@ -38,12 +46,13 @@ const AddOrEditTask = ({
                     },
                     body: JSON.stringify(fields),
                 })
+                const data: unknown = await response.json()
                 if (!response.ok) {
+                    setError(`Failed to update task: ${messageFromApiErrorBody(data)}`)
                     throw new Error('Failed to update task')
                 }
-                const updatedTask = (await response.json()) as Task
+                const updatedTask = data as Task
                 updateTasks((prev) => prev.map(taskItem => taskItem.id === task.id ? updatedTask : taskItem))
-                handleHideAddTask()
             }
 
             else {
@@ -55,10 +64,12 @@ const AddOrEditTask = ({
                     },
                     body: JSON.stringify(fields),
                 })
+                const data: unknown = await response.json()
                 if (!response.ok) {
+                    setError(`Failed to create task: ${messageFromApiErrorBody(data)}`)
                     throw new Error('Failed to create task')
                 }
-                const newTask = (await response.json()) as Task
+                const newTask = data as Task
                 updateTasks((prev) => [...prev, newTask]);
             }
             
@@ -70,6 +81,7 @@ const AddOrEditTask = ({
     }
 
   return (
+    <>
     <li className="row new-task">
         <span className="cell">
             <input type="hidden" />
@@ -103,6 +115,8 @@ const AddOrEditTask = ({
             <button onClick={handleHideAddTask} className="cancel-button">Cancel</button>
         </span>
     </li>
+    {error && <div className="error-message" style={{ color: 'red', display: 'flex', paddingTop: '10px'}}>{error}</div>}
+    </>
   )
 }
 
