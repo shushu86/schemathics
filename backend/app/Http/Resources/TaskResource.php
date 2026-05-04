@@ -7,14 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TaskResource extends JsonResource
 {
-    /**
-     * Return a plain JSON array for collections (see TaskController::getAllTasks).
-     */
-    public static $wrap = null;
-
-    /**
-     * @return array<string, mixed>
-     */
+    
     public function toArray(Request $request): array
     {
         return [
@@ -22,7 +15,8 @@ class TaskResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'status' => self::formatStatus($this->status),
-            'priority' => self::formatPriority($this->priority),
+            'stored_priority' => self::formatPriority($this->stored_priority ?? $this->priority),
+            'effective_priority' => self::formatPriority($this->effective_priority),
             'due_date' => $this->due_date?->format('M j Y, H:i'),
             'created_at' => $this->created_at?->format('M j Y, H:i'),
         ];

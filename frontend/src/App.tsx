@@ -13,7 +13,7 @@ function App() {
       const data = (await response.json()) as Task[]
       setTasks(data)
     } catch (error) {
-      throw new Error('Error fetching tasks:', error) ;
+      console.error('Error fetching tasks:', error)
     } finally {
       setLoading(false);
     }

@@ -1,7 +1,8 @@
 import { useState, type ChangeEvent, type Dispatch, type SetStateAction } from "react";
 import type { Task } from "../../types/task";
+import { formatDateForDatetimeLocal, isEffectivePriorityHigh } from "../../helpers/helper.ts";
 
-const AddTask = ({
+const AddOrEditTask = ({
     handleHideAddTask,
     updateTasks,
     task,
@@ -11,13 +12,14 @@ const AddTask = ({
     task?: Task;
 }) => {
 
-    console.log('task', task);
     const [fields, setFields] = useState({
         title: task?.title ?? '',
         description: task?.description ?? '',
         status: task?.status.toLowerCase() ?? 'todo',
-        priority: task?.priority.toLowerCase() ?? 'low',
-        due_date: task?.due_date ? new Date(task.due_date).toISOString().slice(0, 16) : null,
+        priority: isEffectivePriorityHigh(task) ? 'high' : (task?.stored_priority?.toLowerCase() ?? 'low'),
+        due_date: task?.due_date
+            ? formatDateForDatetimeLocal(new Date(task.due_date))
+            : '',
     })
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -104,4 +106,4 @@ const AddTask = ({
   )
 }
 
-export default AddTask;
+export default AddOrEditTask;

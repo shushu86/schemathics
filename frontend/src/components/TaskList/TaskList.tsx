@@ -2,7 +2,7 @@ import TaskItem from '../TaskItem/TaskItem'
 import type { Task } from '../../types/task'
 import './taskList.scss';
 import { useState, type Dispatch, type SetStateAction } from 'react';
-import AddTask from '../AddTask/AddTask';
+import AddOrEditTask from '../AddOrEditTask/AddOrEditTask';
 
 const TaskList = ({
   tasks,
@@ -56,7 +56,13 @@ const TaskList = ({
             {tasks.map((task) => (
               <TaskItem key={task.id} task={task} updateTasks={updateTasks} />
             ))}
-            {showAddTask && <AddTask handleHideAddTask={handleHideAddTask} updateTasks={updateTasks} /> }
+            {showAddTask && (
+              <AddOrEditTask
+                key="add-task"
+                handleHideAddTask={handleHideAddTask}
+                updateTasks={updateTasks}
+              />
+            )}
 
           </ul>
         </div>

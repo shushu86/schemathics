@@ -17,7 +17,9 @@ class TaskController extends Controller
 
     public function getAllTasks(): JsonResponse
     {
-        $tasks = $this->taskService->getAllTasks();
+        $query_params = request()->query();
+        \Log::info('query_params', $query_params);
+        $tasks = $this->taskService->getAllTasks($query_params);
 
         return response()->json(
             $tasks->map(
@@ -36,15 +38,19 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'status' => ['nullable', 'in:todo,in_progress,done'],
-            'priority' => ['nullable', 'in:low,medium,high'],
+            'status' => ['required', 'in:todo,in_progress,done'],
+            'priority' => ['required', 'in:low,medium,high'],
             'due_date' => ['nullable', 'date_format:Y-m-d\TH:i'],
         ]);
         $validated = $this->normalizeDueDate($validated);
 
         $task = Task::query()->create($validated);
 
-        return (new TaskResource($task))->response()->setStatusCode(201);
+        // Flat object like GET /tasks — JsonResource::response() would wrap in `data` and break the client.
+        return response()->json(
+            (new TaskResource($task))->resolve($request),
+            201
+        );
     }
 
     public function updateTask(Request $request, Task $task): JsonResponse
@@ -52,15 +58,15 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'status' => ['nullable', 'in:todo,in_progress,done'],
-            'priority' => ['nullable', 'in:low,medium,high'],
+            'status' => ['required', 'in:todo,in_progress,done'],
+            'priority' => ['required', 'in:low,medium,high'],
             'due_date' => ['nullable', 'date_format:Y-m-d\TH:i'],
         ]);
         $validated = $this->normalizeDueDate($validated);
 
         $updated = $this->taskService->updateTask($task, $validated);
 
-        return (new TaskResource($updated))->response();
+        return response()->json((new TaskResource($updated))->resolve($request));
     }
 
     public function deleteTask(Task $task): JsonResponse

@@ -1,6 +1,7 @@
 import type { Task } from '../../types/task'
 import { type Dispatch, type SetStateAction, useState } from 'react'
-import AddTask from '../AddTask/AddTask'
+import AddOrEditTask from '../AddOrEditTask/AddOrEditTask'
+import { isEffectivePriorityHigh } from '../../helpers/helper'
 
 type TaskItemProps = {
   task: Task
@@ -24,10 +25,11 @@ const TaskItem = ({ task, updateTasks }: TaskItemProps) => {
       console.error('Error deleting task:', error)
     }
   }
-
+  
   if(isEditMode) {
-    return (<AddTask handleHideAddTask={() => setIsEditMode(false)} updateTasks={updateTasks} task={task} />)
+    return (<AddOrEditTask handleHideAddTask={() => setIsEditMode(false)} updateTasks={updateTasks} task={task} />)
   }
+  
   else {
     return (
       <li className="row">
@@ -35,12 +37,14 @@ const TaskItem = ({ task, updateTasks }: TaskItemProps) => {
         <span className="cell cell-title">{task.title}</span>
         <span className="cell">{task.description}</span>
         <span className="cell">{task.status}</span>
-        <span className="cell">{task.priority}</span>
+        <span className="cell" style={{ color: isEffectivePriorityHigh(task) ? 'red' : undefined }} >
+            {isEffectivePriorityHigh(task) ? 'High' : task.stored_priority}
+        </span>
         <span className="cell">{task.due_date}</span>
         <span className="cell">{task.created_at}</span>
         <span className="cell cell-actions">
           <button type="button" className="action-button" onClick={() => setIsEditMode(true)}>Edit</button>
-          <button type="button" className="action-button" onClick={() => handleDeleteTask(task.id)}>Delete</button>
+          <button type="button" className="action-button" onClick={() => confirm('Are you sure you want to delete this task?') && handleDeleteTask(task.id)}>Delete</button>
         </span>
       </li>
     );

@@ -3,7 +3,8 @@ export type Task = {
   title: string
   description: string
   status: string
-  priority: string
+  stored_priority: string
   due_date: string
   created_at: string
+  effective_priority: string | null
 }
